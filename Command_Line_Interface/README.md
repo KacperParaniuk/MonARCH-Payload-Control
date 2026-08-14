@@ -77,6 +77,28 @@ uv run python main.py --port {Input COMX} --baud {Input Baud Rate}
 
 Allows the user to specify the serial port and baud rate for the Arduino connection.
 
+Windows: 
+
+List COM ports with:
+
+
+MAC: 
+
+List COM ports with 
+
+ls /dev/cu.*
+
+and the following should show up  
+kacper@Kacpers-MacBook-Air-4 MonARCH-Payload-Control % ls /dev/cu.*
+/dev/cu.BeatsFitPro             /dev/cu.debug-console           /dev/cu.usbmodem11101
+/dev/cu.Bluetooth-Incoming-Port /dev/cu.HC-05                   /dev/cu.wlan-debug
+
+then run the following command inside of pib-cli directory 
+
+uv run python main.py --port /dev/cu.usbmodem11101
+
+
+
  1
 ### 4. Commanding the PIB!
 
