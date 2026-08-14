@@ -4,10 +4,10 @@
 
 [Dependency Info](#dependency-info)
 [How to Set Up Dependencies](#how-to-set-up-dependencies--run-monarch-cli)
-- [1. UV INSTALLATION](#1-uv-installation-httpsdocsastralshuvgetting-startedinstallation)
-- [2. PYTHON](#2-python-httpsdocsastralshuvguidesinstall-python)
-- [3. RUNNING SCRIPT](#3-running-the-code)
-- [4. COMMANDING THE PIB](#4-commanding-the-pib)
+[1. UV INSTALLATION](#1-uv-installation-httpsdocsastralshuvgetting-startedinstallation)
+[2. PYTHON](#2-python-httpsdocsastralshuvguidesinstall-python)
+[3. RUNNING SCRIPT](#3-running-the-code)
+[4. COMMANDING THE PIB](#4-commanding-the-pib)
 [Common Errors](#common-errors)
 
 ## Dependency Info 
