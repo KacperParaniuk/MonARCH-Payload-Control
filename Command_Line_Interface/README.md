@@ -13,16 +13,22 @@ UV
 cmd module || read more here: https://docs.python.org/3/library/cmd.html
 
 pyserial — external dependency for the serial side
+
 cmd (Python stdlib, no install needed) — gives nice terminal commanding functionality  
 
 
 ## HOW TO SET UP DEPENDENCIES & RUN MonARCH CLI:
 
+- type in terminal inside of project directory and run >
+
+*If you do have UV installed:
+
+uv sync (Make sure this is correct)
+
 *If you do not have UV installed: 
 
 ### 1. UV INSTALLATION (https://docs.astral.sh/uv/getting-started/installation/)
 
-- type in terminal inside of project directory and run >
 
 WINDOWS - 
 
@@ -34,11 +40,15 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 
 RESTART TERMINAL TO ADD UV TO PATH 
 
-### 2. PYTHON
 
-If you do not have python no worries UV can manage your python type (https://docs.astral.sh/uv/guides/install-python/) If you have python skip this step. 
+
+### 2. PYTHON (https://docs.astral.sh/uv/guides/install-python/)
+
+If you do not have python no worries UV can manage your python type
 
 uv python install
+
+If you have python skip this step. 
 
 ### 3. RUNNING THE CODE
 
@@ -53,7 +63,7 @@ uv run python main.py --port {Input COMX} --baud {Input Baud Rate}
 
 Allows the user to specify the serial port and baud rate for the Arduino connection.
 
-
+ 1
 ### 4. Commanding the PIB!
 
 If you sucessfully executed the program then you should see the following message:
@@ -61,11 +71,10 @@ If you sucessfully executed the program then you should see the following messag
 
 Now you can start running various commands.
 
-See the command .md [Commanding the PIB](INSERT THE LINK)
+See the command .md [Commanding the PIB](https://github.com/KacperParaniuk/MonARCH-Payload-Control/blob/main/Command_Line_Interface/cmds.md#pib-shell-commands)
 
-// make this a git repo that is more friendly to look at 
 
-Common Errors: 
+# Common Errors: 
 
  >   raise SerialException(msg.errno, "could not open port {}: {}".format(self._port, msg))
 
