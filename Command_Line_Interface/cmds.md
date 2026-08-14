@@ -3,7 +3,9 @@ Created By Kacper Paraniuk 07-06-26
 This is a markdown file containing the commands for cli of the payload interface board 
 
 [Command Structure](#command-structure)
+
 [Commands Explanation](#commands-explanation)
+
 [Commands](#commands)
 
 
