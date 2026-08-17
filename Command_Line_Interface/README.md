@@ -81,6 +81,40 @@ Windows:
 
 List COM ports with:
 
+mode 
+
+PS C:\dev\monarch-payload-interface-board\sw\Command_Line_Interface> mode
+
+Status for device COM12:
+------------------------
+    Baud:            0
+    Parity:          None
+    Data Bits:       0
+    Stop Bits:       1
+    Timeout:         OFF
+    XON/XOFF:        OFF
+    CTS handshaking: OFF
+    DSR handshaking: OFF
+    DSR sensitivity: OFF
+    DTR circuit:     OFF
+    RTS circuit:     ON
+
+
+Status for device CON:
+----------------------
+    Lines:          30
+    Columns:        120
+    Keyboard rate:  31
+    Keyboard delay: 1
+    Code page:      437
+
+
+as you can see COM12 is active. 
+
+then 
+
+uv run python main.py --port COM12
+
 
 MAC: 
 
