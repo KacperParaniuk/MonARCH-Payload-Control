@@ -23,6 +23,12 @@ CMD_READ_TC3	= 11
 CMD_READ_TC4	= 12
 CMD_READ_TC5	= 13
 
+CMD_READ_TC1_CJ = 84
+CMD_READ_TC2_CJ = 85
+CMD_READ_TC3_CJ = 86
+CMD_READ_TC4_CJ = 87
+CMD_READ_TC5_CJ = 88
+
 
 # UART Commands for Solenoid Valves
 
@@ -64,6 +70,25 @@ CMD_CLOSE_SOL16  = 48
 CMD_CLOSE_SOL17  = 49
 CMD_CLOSE_SOL18  = 50
 
+CMD_READ_VALVE_STATE_1 = 91
+CMD_READ_VALVE_STATE_2 = 92
+CMD_READ_VALVE_STATE_3 = 93
+CMD_READ_VALVE_STATE_4 = 94
+CMD_READ_VALVE_STATE_5 = 95
+CMD_READ_VALVE_STATE_6 = 96
+CMD_READ_VALVE_STATE_7 = 97
+CMD_READ_VALVE_STATE_8 = 98
+CMD_READ_VALVE_STATE_9 = 99
+CMD_READ_VALVE_STATE_10 = 100
+CMD_READ_VALVE_STATE_11 = 101
+CMD_READ_VALVE_STATE_12 = 102
+CMD_READ_VALVE_STATE_13 = 103
+CMD_READ_VALVE_STATE_14 = 104
+CMD_READ_VALVE_STATE_15 = 105
+CMD_READ_VALVE_STATE_16 = 106
+CMD_READ_VALVE_STATE_17 = 107 
+CMD_READ_VALVE_STATE_18 = 108
+
 
 # UART Commands for ADC7124 PC104 Stack Readings
 
@@ -97,6 +122,9 @@ CMD_READ_CATALYST_LEVEL_A2  = 58
 
 CMD_HEAT_CATALYST  = 59
 
+CMD_MANUAL_HEATER_TURN_ON = 89
+CMD_MANUAL_HEATER_TURN_OFF = 90
+
 
 # UART Commands for Pressure Regulation (PWM / PID)
 
@@ -111,7 +139,18 @@ CMD_PPU_CURRENT_READ_2  = 63
 CMD_PPU_ON  = 64
 CMD_PPU_OFF  = 65
 
-CMD_TOGGLE_LED_RED = 78
+CMD_TOGGLE_RED_LED = 78
+CMD_TOGGLE_GREEN_LED = 79
+CMD_TOGGLE_AMBER_LED = 80
+
+
+# Read Device IDs 
+
+CMD_READ_ID_PT = 81
+CMD_READ_ID_V = 82
+CMD_READ_ID_FDC = 83 
+
+
 
 
 
@@ -170,9 +209,19 @@ class PIBShell(cmd.Cmd):
 
 
     def do_toggle_red_led(self, arg):
-        """Toggle the LED on the payload interface board."""
+        """Toggling the RED LED on the payload interface board."""
         print("Toggling LED...")
-        self.pib.send_command(CMD_TOGGLE_LED_RED)  
+        self.pib.send_command(CMD_TOGGLE_RED_LED)  
+
+    def do_toggle_green_led(self, arg):
+        """Toggling the GREEN LED on the payload interface board."""
+        print("Toggling LED...")
+        self.pib.send_command(CMD_TOGGLE_GREEN_LED)
+
+    def do_toggle_amber_led(self, arg):
+        """Toggling the GREEN LED on the payload interface board."""
+        print("Toggling LED...")
+        self.pib.send_command(CMD_TOGGLE_AMBER_LED)
 
     def do_open_valve(self, arg):
         """Open the valve on the payload interface board."""
@@ -234,7 +283,11 @@ class PIBShell(cmd.Cmd):
             print("Invalid sensor number. Please enter a number between 1 and 5.")
             return
         else:
-            # input logic 
+            print("Reading temperature from sensor " + arg + "...")
+            self.pib.send_command(CMD_READ_TC1 + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Celcius degrees")
 
     def do_read_pressure(self, arg):
         """Read the pressure from the payload interface board."""
@@ -248,10 +301,26 @@ class PIBShell(cmd.Cmd):
             print("Invalid sensor number. Please enter a number between 1 and 8.")
             return
         else:
-            # input logic 
+            print("Reading pressure from sensor " + arg + "...")
+            self.pib.send_command(CMD_READ_PT1 + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Pa") 
 
     def do_read_capacitancez(self, arg):
         """Read the capacitance chip from the payload interface board."""
+        print("Reading pressure from sensor " + arg + "...")
+
+        try: 
+            sensor = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return 
+        
+        self.pib.send_command(CMD_READ_PT1 + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
+        response = self.pib.read_response()
+        if response:
+            print(f"PIB says: {response}" + " Pa") 
 
     def do_read_level(self, arg):
          """Read the level of the FAM142 propellant from the payload interface board."""
