@@ -328,9 +328,7 @@ class PIBShell(cmd.Cmd):
 
 
 
-
          
-
     def do_read_valve_state(self, arg):
         """Read the valve state on the payload interface board."""
         try: 
@@ -368,11 +366,140 @@ class PIBShell(cmd.Cmd):
             return
         else:
             print("Reading voltage divider " + arg + "...")
+            self.pib.send_command(CMD_READ_3V3_VB + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Volts") 
+
+    def do_read_VBAT(self,arg):
+        """Read VBAT Bus of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider " + arg + "...")
+            self.pib.send_command(CMD_READ_VBAT_VA + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Volts") 
+
+    def do_read_12VB(self, arg):
+        """Read 12V Bus of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider " + arg + "...")
+            self.pib.send_command(CMD_READ_12VB_VA + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Volts") 
+    def do_read_12VA(self, arg):
+        """Read 12V Bus of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider " + arg + "...")
+            self.pib.send_command(CMD_READ_12VA_VB + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Volts") 
+
+
+    def do_read_3v3_current(self, arg):
+        """Read 3v3 current of the PIB"""
+        try: 
+            value = int(arg)
+
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider current" + arg + "...")
+            self.pib.send_command(CMD_READ_3V3_VB_CURRENT + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Milli-Amps") 
+
+    def do_read_VBAT_current(self,arg):
+        """Read VBAT Currnet of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider current " + arg + "...")
+            self.pib.send_command(CMD_READ_VBAT_VA_CURRENT + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Milli-Amps") 
+
+    def do_read_12VB(self, arg):
+        """Read 12V Current of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider current" + arg + "...")
+            self.pib.send_command(CMD_READ_12VB_VA_CURRENT + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Milli-Amps") 
+    def do_read_12VA(self, arg):
+        """Read 12V Current of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider current" + arg + "...")
+            self.pib.send_command(CMD_READ_12VA_VB_CURRENT + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Milli-Amps") 
+
+
+
+
+
+
+
 
 
       
-
-        
     def do_run_sequence(self, arg):
         """Run a predefined sequence on the payload interface board."""
         
