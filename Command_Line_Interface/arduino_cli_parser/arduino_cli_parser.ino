@@ -45,8 +45,8 @@ void loop() {
 
     mySerial.write(cmd);
 
-    if(cmd>=0 && cmd<14){
-      Serial.print("(READ CMD) ");
+    if(cmd>=0 && cmd<14 || cmd >= 91 && cmd <=108 || cmd >= 51 && cmd <= 58 || cmd>= 66 && cmd <= 77 || cmd >= 62 && cmd <= 65 || cmd>= 81 && cmd <= 83){
+      // Serial.print("(READ CMD) ");
        if(mySerial.available()){
       // uint8_t cmd = mySerial.read();
       // Serial.println(cmd);
@@ -57,7 +57,7 @@ void loop() {
       incomingData.trim();
       
       // Print the received data to the Serial Monitor
-      Serial.print("Received from STM32: ");
+      // Serial.print("Received from STM32: ");
       Serial.println(incomingData);
       }
     }

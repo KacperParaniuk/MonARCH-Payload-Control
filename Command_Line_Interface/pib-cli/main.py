@@ -2,7 +2,7 @@ import cmd
 import serial 
 import argparse
 import struct
-
+import time 
 
 ''' INTERNAL COMMANDS '''
 CMD_READ_PT1  =  1
@@ -159,7 +159,7 @@ CMD_READ_ID_FDC = 83
 class SerialLink:
     """Computer to Arduino Link """
  
-    def __init__(self, port: str, baud: int = 115200, timeout: float = 1.0):
+    def __init__(self, port: str, baud: int = 115200, timeout: float = 4.0):
         self.port = port
         self.baud = baud
         self.timeout = timeout
@@ -175,16 +175,22 @@ class SerialLink:
         if self.conn:
             self.conn.close()
  
-    def send_command(self, code: int):
+    def send_command(self, code: int, arg: int = 0x00):
         if not 0 <= code <= 255:
             raise ValueError(f"Command code out of range for 1 byte: {code}")
-        payload = struct.pack("B", code)
-        self.conn.write(payload) # sends the bit value'
+        if not 0 <= arg <= 255:
+            raise ValueError(f"Argument out of range: {arg}")
+        payload = struct.pack("BB", code, arg)  # always 2 bytes
+        self.conn.write(payload) # sends the bit value
 
     def read_response(self, terminator: bytes = b'\n') -> str:
         """Read a line of text response from the device."""
+        self.conn.reset_input_buffer()  # discard any stale responses
+        time.sleep(0.05)          # let STM32 start responding
+        
         if not self.conn:
             return ""
+
         line = self.conn.readline()  # blocks until terminator or timeout
         return line.decode('utf-8', errors='replace').strip()
 
@@ -268,7 +274,7 @@ class PIBShell(cmd.Cmd):
             self.pib.send_command(CMD_READ_TC1_CJ + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
             response = self.pib.read_response()
             if response:
-                print(f"PIB says: {response}" + " Celcius degrees")
+                print(f"PIB says: {response}")
 
     def do_read_temp(self, arg):
         """Read the temperature from the payload interface board."""
@@ -326,10 +332,6 @@ class PIBShell(cmd.Cmd):
         print("Reading propellant level from sensor " + arg + "...")
 
 
-
-
-
-         
     def do_read_valve_state(self, arg):
         """Read the valve state on the payload interface board."""
         try: 
@@ -346,12 +348,7 @@ class PIBShell(cmd.Cmd):
             self.pib.send_command(CMD_READ_VALVE_STATE_1 + (valve - 1)) # takes valve 1 and adds the valve number - 1 to obtain the correct command.
             response = self.pib.read_response()
             if response:
-                state = int(response)
-                if(state):
-                    print("Valve ON")
-                else:
-                    print("Valve OFF")
-            
+                print(f"PIB says: {response}")
 
     def do_read_3v3(self, arg):
         """Read 3v3 Bus of the PIB"""
@@ -493,15 +490,40 @@ class PIBShell(cmd.Cmd):
                 print(f"PIB says: {response}" + " Milli-Amps") 
 
 
+        # parameterized command
+    def do_set_duty_1(self, args):
+        '''Set the duty cycle for the pressure regulation on the payload interface board.'''
+
+        try: 
+            duty = int(args)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return 
+
+        if(duty < 0 or duty > 100):
+            print("Invalid duty cycle. Please enter a number between 0 and 100.")
+            return
+
+        self.pib.send_command(CMD_REGULATE_PRESSURE_INPUT_VALUE, duty)
 
 
+    def do_set_duty_2(self, args):
+        '''Set the duty cycle for the pressure regulation on the payload interface board.'''
+
+        try: 
+            duty = int(args)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return 
+
+        if(duty < 0 or duty > 100):
+            print("Invalid duty cycle. Please enter a number between 0 and 100.")
+            return
+
+        self.pib.send_command(CMD_REGULATE_PRESSURE_2_INPUT_VALUE, duty)
 
 
-
-
-
-      
-    def do_run_sequence(self, arg):
+    def do_run_sequence(self, args):
         """Run a predefined sequence on the payload interface board."""
         
         print(arg)
