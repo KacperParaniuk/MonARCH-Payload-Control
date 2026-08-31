@@ -207,7 +207,6 @@ class PIBShell(cmd.Cmd):
         print("Exiting the PIB shell.")
         return True
 
-
     def do_toggle_red_led(self, arg):
         """Toggling the RED LED on the payload interface board."""
         print("Toggling LED...")
@@ -289,8 +288,6 @@ class PIBShell(cmd.Cmd):
             if response:
                 print(f"PIB says: {response}" + " Celcius degrees")
 
-
-
     def do_read_pressure(self, arg):
         """Read the pressure from the payload interface board."""
         try: 
@@ -309,9 +306,9 @@ class PIBShell(cmd.Cmd):
             if response:
                 print(f"PIB says: {response}" + " Pa") 
 
-    def do_read_capacitance(self, arg):
+    def do_read_capacitancez(self, arg):
         """Read the capacitance chip from the payload interface board."""
-        print("Reading capacitance from sensor " + arg + "...")
+        print("Reading pressure from sensor " + arg + "...")
 
         try: 
             sensor = int(arg)
@@ -319,7 +316,7 @@ class PIBShell(cmd.Cmd):
             print("Invalid input. Please enter a number between 1 and 2.")
             return 
         
-        self.pib.send_command(CMD_READ_CAPACITANCE_A1 + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
+        self.pib.send_command(CMD_READ_PT1 + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
         response = self.pib.read_response()
         if response:
             print(f"PIB says: {response}" + " Pa") 
@@ -328,17 +325,11 @@ class PIBShell(cmd.Cmd):
         """Read the level of the FAM142 propellant from the payload interface board."""
         print("Reading propellant level from sensor " + arg + "...")
 
-        try: 
-            sensor = int(arg)
-        except ValueError:
-            print("Invalid input. Please enter a number between 1 and 2.")
-            return 
-        
-        self.pib.send_command(CMD_READ_CATALYST_LEVEL_A1 + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
-        response = self.pib.read_response()
-        if response:
-            print(f"PIB says: {response}" + " Pa") 
 
+
+
+
+         
     def do_read_valve_state(self, arg):
         """Read the valve state on the payload interface board."""
         try: 
@@ -355,9 +346,161 @@ class PIBShell(cmd.Cmd):
             self.pib.send_command(CMD_READ_VALVE_STATE_1 + (valve - 1)) # takes valve 1 and adds the valve number - 1 to obtain the correct command.
             response = self.pib.read_response()
             if response:
-                print(f"Valve State: {response}" + " Pa") 
+                state = int(response)
+                if(state):
+                    print("Valve ON")
+                else:
+                    print("Valve OFF")
+            
+
+    def do_read_3v3(self, arg):
+        """Read 3v3 Bus of the PIB"""
+        try: 
+            value = int(arg)
+
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider " + arg + "...")
+            self.pib.send_command(CMD_READ_3V3_VB + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Volts") 
+
+    def do_read_VBAT(self,arg):
+        """Read VBAT Bus of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider " + arg + "...")
+            self.pib.send_command(CMD_READ_VBAT_VA + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Volts") 
+
+    def do_read_12VB(self, arg):
+        """Read 12V Bus of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider " + arg + "...")
+            self.pib.send_command(CMD_READ_12VB_VA + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Volts") 
+    def do_read_12VA(self, arg):
+        """Read 12V Bus of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider " + arg + "...")
+            self.pib.send_command(CMD_READ_12VA_VB + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Volts") 
+
+
+    def do_read_3v3_current(self, arg):
+        """Read 3v3 current of the PIB"""
+        try: 
+            value = int(arg)
+
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider current" + arg + "...")
+            self.pib.send_command(CMD_READ_3V3_VB_CURRENT + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Milli-Amps") 
+
+    def do_read_VBAT_current(self,arg):
+        """Read VBAT Currnet of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider current " + arg + "...")
+            self.pib.send_command(CMD_READ_VBAT_VA_CURRENT + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Milli-Amps") 
+
+    def do_read_12VB(self, arg):
+        """Read 12V Current of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider current" + arg + "...")
+            self.pib.send_command(CMD_READ_12VB_VA_CURRENT + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Milli-Amps") 
+    def do_read_12VA(self, arg):
+        """Read 12V Current of the PIB"""
+        try: 
+            value = int(arg)
+        except ValueError:
+            print("Invalid input. Please enter a number between 1 and 2.")
+            return
+        if(value <1 or value > 2):
+            print("Invalid voltage divider number. Please enter either 1 or 2.")
+            return
+        else:
+            print("Reading voltage divider current" + arg + "...")
+            self.pib.send_command(CMD_READ_12VA_VB_CURRENT + (value - 1)) 
+            response = self.pib.read_response()
+            if response:
+                print(f"PIB says: {response}" + " Milli-Amps") 
+
+
+
+
+
+
+
+
+
       
-        
     def do_run_sequence(self, arg):
         """Run a predefined sequence on the payload interface board."""
         
@@ -365,10 +508,6 @@ class PIBShell(cmd.Cmd):
 
         if(arg == "fill_accum1"):
             print("Running fill accumulator sequence 1...")
-
-            # we do not have a command for this just yet. 
-            # COMING SOON!!! 
-
             # Here add the code to run sequence 1 on the PIB
 
         if(arg == "run_espray"):
