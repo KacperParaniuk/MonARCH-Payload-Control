@@ -266,7 +266,7 @@ class PIBShell(cmd.Cmd):
             return
         else:
             print("Reading cold junction temperature from sensor " + arg + "...")
-            self.pib.send_command(CMD_READ_TC1_CJ1 + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
+            self.pib.send_command(CMD_READ_TC1_CJ + (sensor - 1)) # takes sensor 1 and adds the sensor number - 1 to obtain the correct command.
             response = self.pib.read_response()
             if response:
                 print(f"PIB says: {response}" + " Celcius degrees")
@@ -325,7 +325,7 @@ class PIBShell(cmd.Cmd):
             print(f"PIB says: {response}" + " Pa") 
 
     def do_read_level(self, arg):
-         """Read the level of the FAM142 propellant from the payload interface board."""
+        """Read the level of the FAM142 propellant from the payload interface board."""
         print("Reading propellant level from sensor " + arg + "...")
 
         try: 
@@ -352,7 +352,7 @@ class PIBShell(cmd.Cmd):
             return
         else:
             print("Reading valve " + arg + "...")
-            self.pib.send_command(CMD_READ_VALVE_STATE + (valve - 1)) # takes valve 1 and adds the valve number - 1 to obtain the correct command.
+            self.pib.send_command(CMD_READ_VALVE_STATE_1 + (valve - 1)) # takes valve 1 and adds the valve number - 1 to obtain the correct command.
             response = self.pib.read_response()
             if response:
                 print(f"Valve State: {response}" + " Pa") 
