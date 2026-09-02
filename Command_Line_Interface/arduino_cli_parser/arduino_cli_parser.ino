@@ -3,6 +3,7 @@ int incomingByte = 0; // for incoming serial data
 #include <SoftwareSerial.h>
 
 
+
 const byte rxPin = 2;  // RX of the device
 const byte txPin = 3;  // TX of the device
 
@@ -40,29 +41,26 @@ void loop() {
 
 
 
-  if (Serial.available()) {
+  if (Serial.available() >= 2) {
     uint8_t cmd = Serial.read();
+    uint8_t arg = Serial.read();
+
 
     mySerial.write(cmd);
+    mySerial.write(arg);
 
-    if(cmd>=0 && cmd<14 || cmd >= 91 && cmd <=108 || cmd >= 51 && cmd <= 58 || cmd>= 66 && cmd <= 77 || cmd >= 62 && cmd <= 65 || cmd>= 81 && cmd <= 83){
-      // Serial.print("(READ CMD) ");
-       if(mySerial.available()){
-      // uint8_t cmd = mySerial.read();
-      // Serial.println(cmd);
-      // Read the incoming bytes until a newline character is found
-      String incomingData = mySerial.readStringUntil('\n');
-      
-      // Trim any trailing carriage returns (\r)
-      incomingData.trim();
-      
-      // Print the received data to the Serial Monitor
-      // Serial.print("Received from STM32: ");
-      Serial.println(incomingData);
-      }
+
+    // wait for STM32 to respond
+    unsigned long start = millis();
+    while (!mySerial.available() && millis() - start < 3000) {
+        delay(1); 
     }
 
-
+    if (mySerial.available()) {
+        String incomingData = mySerial.readStringUntil('\n');
+        incomingData.trim();
+        Serial.println(incomingData);
+    }
 
     digitalWrite(LED_1, 1);
     delay(100);
